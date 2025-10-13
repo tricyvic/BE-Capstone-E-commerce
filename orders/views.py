@@ -1,26 +1,41 @@
-from rest_framework import generics, permissions
+from rest_framework import status, permissions, generics
 from rest_framework.response import Response
+from cart.models import Cart, CartItem
 from .models import Order, OrderItem
-from cart.models import CartItem
-from products.models import Product
-from decimal import Decimal
 
-class CheckoutView(generics.CreateAPIView):
+class CheckoutView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request):
-        cart_items = CartItem.objects.filter(user=request.user)
-        if not cart_items:
-            return Response({"error": "Cart is empty"}, status=400)
+    def post(self, request, *args, **kwargs):
+        user = request.user
 
-        total = sum(item.product.price * item.quantity for item in cart_items)
-        order = Order.objects.create(user=request.user, total_price=Decimal(total))
+        try:
+            cart = Cart.objects.get(user=user)
+        except Cart.DoesNotExist:
+            return Response({"error": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        for item in cart_items:
-            OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
-            item.delete()
+        if not cart.items.exists():
+            return Response({"error": "Your cart is empty."}, status=status.HTTP_400_BAD_REQUEST)
 
-        order.payment_status = "Paid"  # Mock payment success
-        order.save()
+        # Create an Order
+        order = Order.objects.create(user=user)
 
-        return Response({"message": "Order placed successfully", "order_id": order.id})
+        # Move items from cart to order
+        for item in cart.items.all():
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                price=item.product.price,
+            )
+
+        # Calculate total
+        order.calculate_total()
+
+        # Clear cart after checkout
+        cart.items.all().delete()
+
+        return Response(
+            {"message": "Order placed successfully!", "order_id": order.id, "total": order.total_price},
+            status=status.HTTP_201_CREATED,
+        )
