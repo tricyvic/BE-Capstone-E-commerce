@@ -1,11 +1,74 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecom_wat_api</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Ecom Watch API</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  </head>
+  <body>
+    <header>
+      <h1>E-commerce Product API (Django + DRF)</h1>
+      <nav>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#documentation">Documentation</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section id="introduction">
+        <p>
+          This is a backend E-commerce Product API built with Django and Django
+          REST Framework (DRF). It provides endpoints for user authentication,
+          product management (CRUD), and search/filtering. The project mimics a
+          real-world backend developer workflow, including JWT authentication,
+          product categories, search functionality, and deployment.
+        </p>
+      </section>
+      <section id="features">
+        <h2>Features</h2>
+        <ul>
+          <li>Registration & Authentication (JWT).</li>
+          <li>CRUD operations for products:</li>
+          <li>
+            Name, Description, Price, Category, Stock Quantity, Image URL,
+            Created Date.
+          </li>
+          <li>
+            Product search by name or category (partial matches supported).
+          </li>
+          <li>
+            Product filtering by category, price range, stock availability.
+          </li>
+          <li>Pagination for large product lists.</li>
+          <li>
+            Admin-only access for product creation, updates, and deletion.
+          </li>
+          <li>API documentation with Swagger/OpenAPI.</li>
+        </ul>
+      </section>
+      <section id="documentation">
+        <h2>Documentation</h2>
+        <p>
+          For detailed API documentation, please visit our
+          <a href="/swagger">documentation page</a>.
+        </p>
+      </section>
+      <section id="contact">
+        <h2>Contact Me</h2>
+        <p>
+          If you have any questions, feel free to reach out at
+          <a href="mailto:wangombevictor5@gmail.com"
+            >wangombevictor5@gmail.com</a
+          >.
+        </p>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2023 Ecom Watch API. All rights reserved.</p>
+    </footer>
+  </body>
 </html>
